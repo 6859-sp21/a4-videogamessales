@@ -23,6 +23,62 @@
     <div id="chart" style="width:420px;height:420px;">
       <!-- This is where we will put our chart. -->
     </div>
+    <div id="filter">
+      <label for="platform"> 
+        Choose a platform:
+      </label>
+
+      <select name="platform" id="platform">
+        <option value="3do">3DO</option>
+        <option value="3ds">3DS</option>
+        <option value="2600">2600</option>
+        <option value="dc">DC</option>
+        <option value="ds">DS</option>
+        <option value="gb">GB</option>
+        <option value="gba">GBA</option>
+        <option value="gc">GC</option>
+        <option value="gen">GEN</option>
+        <option value="gg">GG</option>
+        <option value="n64">N64</option>
+        <option value="nes">NES</option>
+        <option value="ng">NG</option>
+        <option value="pc">PC</option>
+        <option value="pcfx">PCFX</option>
+        <option value="ps">PS</option>
+        <option value="ps2">PS2</option>
+        <option value="ps3">PS3</option>
+        <option value="ps4">PS4</option>
+        <option value="psp">PSP</option>
+        <option value="sat">SAT</option>
+        <option value="scd">SCD</option>
+        <option value="tg16">TG16</option>
+        <option value="wii">Wii</option>
+        <option value="ws">WS</option>
+        <option value="x360">X360</option>
+        <option value="xb">XB</option>
+        <option value="xone">XOne</option>
+      </select>
+
+      <label for="genre"> 
+        Choose a genre
+      </label>
+
+      <select name="genre" id="genre">
+        <option value="---">---</option>
+        <option value="action">Action</option>
+        <option value="adventure">Adventure</option>
+        <option value="fighting">Fighting</option>
+        <option value="misc">Misc</option>
+        <option value="platform">Platform</option>
+        <option value="puzzle">Puzzle</option>
+        <option value="racing">Racing</option>
+        <option value="role-playing">Role-Playing</option>
+        <option value="shooter">Shooter</option>
+        <option value="simulation">Simulation</option>
+        <option value="sports">Sports</option>
+        <option value="strategy">Strategy</option>
+      </select>
+    </div>
 
     <script>
       // 1. Download data
@@ -77,17 +133,18 @@
         .classed('y-axis', true)
         .attr('transform', `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
-        .append('text')
-          .attr('transform', `translate(20, ${margin.top}) rotate(-90)`)
-          .attr('text-anchor', 'end')
-          .attr('fill', 'black')
-          .attr('font-size', '12px')
-          .attr('font-weight', 'bold')
-          .text('Total Sales');
+        // .append('text')
+        //   .attr('transform', `translate(20, ${margin.top}) rotate(-90)`)
+        //   .attr('text-anchor', 'end')
+        //   .attr('fill', 'black')
+        //   .attr('font-size', '12px')
+        //   .attr('font-weight', 'bold')
+        //   .text('Total Sales');
 
       const g_hist = svg.append('g')
         .classed('marks', true);
       
+      // draw histogram
       function dataJoinHisto(rawData) {
         g_hist.selectAll('rect')
           .data(rawData)
@@ -95,12 +152,13 @@
             enter => enter.append("rect")
                   .attr('fill', d => colorScale(d.rank))
                   .attr('x', d => xScale(d.rank) + margin.left)
-                  .attr('y', d => yScale(d.global_sales))
+                  .attr('y', d => yScale(d.global_sales) - margin.bottom)
                   .attr('width', xScale.bandwidth())
                 .call(enter => enter.transition().duration(1000)
                   .attr('height', d => height - yScale(d.global_sales)))
           );
       }
+
       
       dataJoinHisto(data10);
 
