@@ -98,10 +98,6 @@
 
       console.log(data10);
 
-      function hello(value) {
-        console.log(value);
-      };
-
       // 3. Create a SVG we will use to make our chart.
       const svg = d3.create('svg')
         .attr('width', width)
@@ -232,7 +228,6 @@
               (platform === d.platform.toLowerCase() || platform === "---") && 
               (genre === d.genre.toLowerCase() || genre === "---") ) {
             this.count++;
-            console.log('entered');
             return true;
           }
           return false;
@@ -254,6 +249,7 @@
         genreValue = e.target.value;
 
         let filteredData = filterData(platformValue, genreValue);
+        console.log(filteredData);
         // Might need a promise here
         dataJoinHisto(filteredData);}
       );
