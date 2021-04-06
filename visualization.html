@@ -5,7 +5,7 @@
     <style> /* set the CSS */
       div.tooltip {
         position: absolute;
-        text-align: center;
+        text-align: left;
         width: auto;
         height: auto;
         padding: 2px;
@@ -29,6 +29,7 @@
       </label>
 
       <select name="platform" id="platform">
+        <option value="---">---</option>
         <option value="3do">3DO</option>
         <option value="3ds">3DS</option>
         <option value="2600">2600</option>
@@ -143,6 +144,10 @@
 
       const g_hist = svg.append('g')
         .classed('marks', true);
+
+      var tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
       
       // draw histogram
       function dataJoinHisto(rawData) {
@@ -156,7 +161,31 @@
                   .attr('width', xScale.bandwidth())
                 .call(enter => enter.transition().duration(1000)
                   .attr('height', d => height - yScale(d.global_sales)))
-          );
+          )
+          .on("mouseover", function(event, d) {
+            tooltip.transition()
+              .duration(200)
+              .style("opacity", .9);
+            tooltip.html("Name: " + d.name + "<br/> Rank: " + d.rank + "<br/> Released Year: " + d.year
+            + "<br/> Platform: " + d.platform + "<br/> Genre: " + d.genre + "<br/> Publisher: " + d.publisher)
+              .style("left", (event.pageX) + "px")
+              .style("background", colorScale(d.rank))
+              .style("top", (event.pageY - 28) + "px");
+
+            d3.select(this)
+              .attr("opacity", .5)
+              .attr("d", symbol.size(64 * 4));
+          })
+          .on("mouseout", function(event, d) {
+            tooltip.transition()
+              .duration(500)
+              .style("opacity", 0);
+
+            d3.select(this)
+              .attr("opacity", 1)
+              .attr("d", symbol.size(64));
+
+            });
       }
 
       
