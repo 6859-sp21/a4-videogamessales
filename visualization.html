@@ -91,8 +91,16 @@
       const margin = ({top: 20, right: 60, bottom: 20, left: 60});
 
       const data10 = data.filter(d => d.rank <= 10);
+      
+      // default platform/genre values
+      let platformValue = "---";
+      let genreValue = "---";
 
       console.log(data10);
+
+      function hello(value) {
+        console.log(value);
+      };
 
       // 3. Create a SVG we will use to make our chart.
       const svg = d3.create('svg')
@@ -101,7 +109,8 @@
 
       // 4. Setting up scales.
       const xScale = d3.scaleBand()
-          .domain(data10.map(d => d.rank))
+          // .domain(data10.map(d => d.rank))
+          .domain([1,2,3,4,5,6,7,8,9,10])
           .range([margin.left, width - margin.right])
           .padding(0.1);
     
@@ -159,8 +168,19 @@
                   .attr('x', d => xScale(d.rank))
                   .attr('y', d => yScale(d.global_sales) - margin.bottom)
                   .attr('width', xScale.bandwidth())
-                .call(enter => enter.transition().duration(1000)
-                  .attr('height', d => height - yScale(d.global_sales)))
+                  .call(enter => enter.transition().duration(1000)
+                    .attr('height', d => height - yScale(d.global_sales))),
+            update => update
+                  .attr('fill', d => colorScale(d.rank))
+                  .attr('x', (d, i) => xScale(i + 1))
+                  .attr('y', d => yScale(d.global_sales) - margin.bottom)
+                  .attr('width', xScale.bandwidth())
+                  .call(enter => enter.transition().duration(1000)
+                    .attr('height', d => height - yScale(d.global_sales))),
+            exit => exit
+                  .call(exit => exit.transition().duration(1000)
+                    .attr('height', d => height - yScale(0))
+                    .remove())
           )
           .on("mouseover", function(event, d) {
             tooltip.transition()
@@ -187,11 +207,56 @@
 
             });
       }
-
       
-      dataJoinHisto(data10);
+      // Function to filter data based on dropdown menu values
+
+      const filterData = (platform, genre) => {
+        // function *filter(array, condition, maxSize) {
+        //   if (!maxSize || maxSize > array.length) {
+        //     maxSize = array.length;
+        //   }
+        //   let count = 0;
+        //   let i = 0;
+        //   while ( count< maxSize && i < array.length ) {
+        //     if (condition(array[i])) {
+        //       yield array[i];
+        //       count++;
+        //     }
+        //     i++;
+        //   }
+
+        //   return [...filter(data, /*condition */, 10)]
+        // }
+        return data.filter(function(d) {
+          if (this.count < 10 && 
+              (platform === d.platform.toLowerCase() || platform === "---") && 
+              (genre === d.genre.toLowerCase() || genre === "---") ) {
+            this.count++;
+            console.log('entered');
+            return true;
+          }
+          return false;
+        }, {count: 0})
+      }
+
+      dataJoinHisto(data10); 
 
       document.getElementById("chart").appendChild(svg.node());
+      document.getElementById("platform").addEventListener('change', (e) => {
+        platformValue = e.target.value;
+
+        let filteredData = filterData(platformValue, genreValue);
+        console.log(filteredData);
+        // Might need a promise here
+        dataJoinHisto(filteredData);
+      });
+      document.getElementById("genre").addEventListener('change', (e) => {
+        genreValue = e.target.value;
+
+        let filteredData = filterData(platformValue, genreValue);
+        // Might need a promise here
+        dataJoinHisto(filteredData);}
+      );
       });
       
     </script>
