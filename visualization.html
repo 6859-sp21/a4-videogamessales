@@ -100,7 +100,7 @@
       // 2. Setting up variables that describe our chart's space.
       const height = 400;
       const width = 800;
-      const margin = ({top: 20, right: 60, bottom: 20, left: 60});
+      const margin = ({top: 20, right: 60, bottom: 35, left: 60});
 
       const heightTreemap = 250;
       const widthTreemap = 400;
@@ -141,7 +141,7 @@
           .attr('font-size', '12px')
           .attr('font-weight', 'bold')
           .attr('x', width - margin.right)
-          .attr('y', -10)
+          .attr('y', margin.bottom - 5)
           .text('Ranking');
       
       // y-axis
@@ -150,7 +150,7 @@
         .attr('transform', `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
         .append('text')
-          .attr('transform', `translate(20, ${margin.top}) rotate(-90)`)
+          .attr('transform', `translate(-30, ${margin.top}) rotate(-90)`)
           .attr('text-anchor', 'end')
           .attr('fill', 'black')
           .attr('font-size', '12px')
