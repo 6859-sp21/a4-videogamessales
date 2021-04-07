@@ -2,6 +2,7 @@
   <head>
     <!-- Load d3.js -->
     <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="https://d3js.org/d3-hierarchy.v2.min.js"></script>
     <style> /* set the CSS */
       div.tooltip {
         position: absolute;
@@ -15,14 +16,29 @@
         border-radius: 8px;
         pointer-events: none;
       }
+
+      #visual {
+        display: flex;
+      }
+
+      #filter {
+        margin-left: 60;
+      }
+
     </style>
   </head>
   <body>
     <h1>6.859: Video Games Sales</h1>
-
-    <div id="chart" style="width:420px;height:420px;">
-      <!-- This is where we will put our chart. -->
+    
+    <div id="visual">
+      <div id="chart">
+        <!-- This is where we will put our chart. -->
+      </div>
+      <div id="treemap">
+        <!-- This is where we will put our treemap. -->
+      </div>
     </div>
+
     <div id="filter">
       <label for="platform"> 
         Choose a platform:
@@ -85,10 +101,13 @@
       // 1. Download data
       d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-videogamessales/main/vgsalesglobale.csv")
       .then(data => {
-        // 2. Setting up variables that describe our chart's space.
+      // 2. Setting up variables that describe our chart's space.
       const height = 400;
-      const width = 800;;
-      const margin = ({top: 20, right: 60, bottom: 20, left: 60});
+      const width = 800;
+      const margin = ({top: 20, right: 60, bottom: 35, left: 60});
+
+      const heightTreemap = 250;
+      const widthTreemap = 400;
 
       const data10 = data.filter(d => d.rank <= 10);
       
@@ -131,7 +150,7 @@
           .attr('font-size', '12px')
           .attr('font-weight', 'bold')
           .attr('x', width - margin.right)
-          .attr('y', -10)
+          .attr('y', margin.bottom - 5)
           .text('Ranking');
       
       // y-axis
@@ -139,13 +158,13 @@
         .classed('y-axis', true)
         .attr('transform', `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
-        // .append('text')
-        //   .attr('transform', `translate(20, ${margin.top}) rotate(-90)`)
-        //   .attr('text-anchor', 'end')
-        //   .attr('fill', 'black')
-        //   .attr('font-size', '12px')
-        //   .attr('font-weight', 'bold')
-        //   .text('Total Sales');
+        .append('text')
+          .attr('transform', `translate(-30, ${margin.top}) rotate(-90)`)
+          .attr('text-anchor', 'end')
+          .attr('fill', 'black')
+          .attr('font-size', '12px')
+          .attr('font-weight', 'bold')
+          .text('Total Sales');
 
       const g_hist = svg.append('g')
         .classed('marks', true);
@@ -190,7 +209,6 @@
 
             d3.select(this)
               .attr("opacity", .5)
-              .attr("d", symbol.size(64 * 4));
           })
           .on("mouseout", function(event, d) {
             tooltip.transition()
@@ -199,30 +217,72 @@
 
             d3.select(this)
               .attr("opacity", 1)
-              .attr("d", symbol.size(64));
+          })
+          .on("click", function(event, d) {
+            const oldTreemap = document.getElementById("treemap")
+            oldTreemap.querySelectorAll('*').forEach(n => n.remove());
 
-            });
+            drawTreemap(aggregateTreemap(d));
+          });
+      }
+      
+      // aggregate data before passing it into treemap
+      function aggregateTreemap(data) {
+        total = parseFloat(data.na_sales) + parseFloat(data.jp_sales) + parseFloat(data.other_sales) + parseFloat(data.eu_sales);
+        console.log(total);
+        return {
+          name: data.name,
+          children: [
+            {name: "NA", value: parseFloat(data.na_sales)/total * 100},
+            {name: "JP", value: parseFloat(data.jp_sales)/total * 100},
+            {name: "EU", value: parseFloat(data.eu_sales)/total * 100},
+            {name: "Other", value: parseFloat(data.other_sales)/total * 100}
+          ]
+        };
+      }
+
+      function drawTreemap(data) {
+        
+        const root = treemap(data);
+
+        const svgTreemap = d3.create("svg")
+          .attr("width", widthTreemap)
+          .attr("height", heightTreemap)
+          .style("font", "10px sans-serif")
+          .style("margin-top", margin.top);
+
+        const leaf = svgTreemap.selectAll("g")
+          .data(root.leaves())
+          .join("g")
+          .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+        leaf.append("title")
+          .text(d => d.data.name + d.data.value.toFixed(2));
+
+        leaf.append("rect")
+          .attr("fill", d => colorScale(d.data.name))
+          .attr("fill-opacity", 0.6)
+          .attr("width", d => d.x1 - d.x0)
+          .attr("height", d => d.y1 - d.y0);
+
+        leaf.append("text")
+          .attr("x", 10)    // +10 to adjust position (more right)
+          .attr("y", 20)    // +20 to adjust position (lower)
+          .text(d => d.data.name + "\n" + d.data.value.toFixed(2) + "%")
+          .attr("font-size", "12px")
+          .attr("fill", "white")
+
+        document.getElementById("treemap").appendChild(svgTreemap.node());
+      }
+
+      function treemap(data) {
+        return d3.treemap().tile(d3.treemapSquarify).size([widthTreemap, heightTreemap]).padding(1).round(true)
+              (d3.hierarchy(data).sum(d => d.value).sort((a, b) => b.value - a.value))
       }
       
       // Function to filter data based on dropdown menu values
 
       const filterData = (platform, genre) => {
-        // function *filter(array, condition, maxSize) {
-        //   if (!maxSize || maxSize > array.length) {
-        //     maxSize = array.length;
-        //   }
-        //   let count = 0;
-        //   let i = 0;
-        //   while ( count< maxSize && i < array.length ) {
-        //     if (condition(array[i])) {
-        //       yield array[i];
-        //       count++;
-        //     }
-        //     i++;
-        //   }
-
-        //   return [...filter(data, /*condition */, 10)]
-        // }
         return data.filter(function(d) {
           if (this.count < 10 && 
               (platform === d.platform.toLowerCase() || platform === "---") && 
