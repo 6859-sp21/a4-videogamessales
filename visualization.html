@@ -202,7 +202,8 @@
               .duration(200)
               .style("opacity", .9);
             tooltip.html("Name: " + d.name + "<br/> Rank: " + d.rank + "<br/> Released Year: " + d.year
-            + "<br/> Platform: " + d.platform + "<br/> Genre: " + d.genre + "<br/> Publisher: " + d.publisher)
+            + "<br/> Total Unit Sales: " + d.global_sales  + "m<br/> Platform: " + d.platform + "<br/> Genre: " + d.genre 
+            + "<br/> Publisher: " + d.publisher)
               .style("left", (event.pageX) + "px")
               .style("background", colorScale(d.rank))
               .style("top", (event.pageY - 28) + "px");
@@ -263,7 +264,7 @@
           .attr("fill", d => colorScale(d.data.name))
           .attr("fill-opacity", 0.6)
           .attr("width", d => d.x1 - d.x0)
-          .attr("height", d => d.y1 - d.y0);
+          .attr("height", d => d.y1 - d.y0)
 
         leaf.append("text")
           .attr("x", 10)    // +10 to adjust position (more right)
