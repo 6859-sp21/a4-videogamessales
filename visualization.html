@@ -181,17 +181,17 @@
             enter => enter.append("rect")
                   .attr('fill', d => colorScale(d.genre))
                   .attr('x', (d, i) => xScale(i + 1))
-                  .attr('y', d => yScale(d.global_sales) - margin.bottom)
+                  .attr('y', d => yScale(d.global_sales))
                   .attr('width', xScale.bandwidth())
                   .call(enter => enter.transition().duration(1000)
-                    .attr('height', d => height - yScale(d.global_sales))),
+                    .attr('height', d => height - yScale(d.global_sales)- margin.bottom)),
             update => update
                   .attr('fill', d => colorScale(d.genre))
                   .attr('x', (d, i) => xScale(i + 1))
-                  .attr('y', d => yScale(d.global_sales) - margin.bottom)
+                  .attr('y', d => yScale(d.global_sales))
                   .attr('width', xScale.bandwidth())
                   .call(enter => enter.transition().duration(1000)
-                    .attr('height', d => height - yScale(d.global_sales))),
+                    .attr('height', d => height - yScale(d.global_sales)- margin.bottom)),
             exit => exit
                   .call(exit => exit.transition().duration(1000)
                     .attr('height', d => height - yScale(0))
