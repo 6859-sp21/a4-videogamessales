@@ -179,14 +179,14 @@
           .data(rawData)
           .join(
             enter => enter.append("rect")
-                  .attr('fill', d => colorScale(d.rank))
+                  .attr('fill', d => colorScale(d.genre))
                   .attr('x', (d, i) => xScale(i + 1))
                   .attr('y', d => yScale(d.global_sales) - margin.bottom)
                   .attr('width', xScale.bandwidth())
                   .call(enter => enter.transition().duration(1000)
                     .attr('height', d => height - yScale(d.global_sales))),
             update => update
-                  .attr('fill', d => colorScale(d.rank))
+                  .attr('fill', d => colorScale(d.genre))
                   .attr('x', (d, i) => xScale(i + 1))
                   .attr('y', d => yScale(d.global_sales) - margin.bottom)
                   .attr('width', xScale.bandwidth())
