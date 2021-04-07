@@ -17,13 +17,17 @@
         pointer-events: none;
       }
 
+      #visual {
+        display: flex;
+      }
+
     </style>
   </head>
   <body>
     <h1>6.859: Video Games Sales</h1>
     
     <div id="visual">
-      <div id="chart" style="width:420px;height:420px;">
+      <div id="chart">
         <!-- This is where we will put our chart. -->
       </div>
       <div id="treemap">
@@ -100,7 +104,6 @@
 
       const heightTreemap = 250;
       const widthTreemap = 400;
-      const marginTreemap = {top: 20, right: 20, bottom: 20, left: width+10};
 
       const data10 = data.filter(d => d.rank <= 10);
 
@@ -202,7 +205,8 @@
             drawTreemap(aggregateTreemap(d));
           });
       }
-
+      
+      // aggregate data before passing it into treemap
       function aggregateTreemap(data) {
         total = parseFloat(data.na_sales) + parseFloat(data.jp_sales) + parseFloat(data.other_sales) + parseFloat(data.eu_sales);
         console.log(total);
@@ -222,11 +226,10 @@
         const root = treemap(data);
 
         const svgTreemap = d3.create("svg")
-          // .attr("viewBox", [0, 0, widthTreemap, heightTreemap])
-          // .attr('transform', `translate(${marginTreemap.left}, ${heightTreemap - marginTreemap.bottom})`)
           .attr("width", widthTreemap)
           .attr("height", heightTreemap)
-          .style("font", "10px sans-serif");
+          .style("font", "10px sans-serif")
+          .style("margin-top", margin.top);
 
         const leaf = svgTreemap.selectAll("g")
           .data(root.leaves())
