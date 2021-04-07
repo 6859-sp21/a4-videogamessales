@@ -205,7 +205,7 @@
             + "<br/> Total Unit Sales: " + d.global_sales  + "m<br/> Platform: " + d.platform + "<br/> Genre: " + d.genre 
             + "<br/> Publisher: " + d.publisher)
               .style("left", (event.pageX) + "px")
-              .style("background", colorScale(d.rank))
+              .style("background", colorScale(d.genre))
               .style("top", (event.pageY - 28) + "px");
 
             d3.select(this)
