@@ -9,7 +9,7 @@
         text-align: left;
         width: auto;
         height: auto;
-        padding: 2px;
+        padding: 5px;
         font: 12px sans-serif;
         /* background: lightsteelblue; */
         border: 0px;
@@ -110,6 +110,8 @@
       const widthTreemap = 400;
 
       const data10 = data.filter(d => d.rank <= 10);
+
+      const regionAbbr = {NA: "North America", JP: "Japan", Other: "Other", EU: "Europe"}
       
       // default platform/genre values
       let platformValue = "---";
@@ -210,6 +212,8 @@
 
             d3.select(this)
               .attr("opacity", .5)
+
+            drawTreemap(aggregateTreemap(d));
           })
           .on("mouseout", function(event, d) {
             tooltip.transition()
@@ -218,13 +222,10 @@
 
             d3.select(this)
               .attr("opacity", 1)
-          })
-          .on("click", function(event, d) {
+
             const oldTreemap = document.getElementById("treemap")
             oldTreemap.querySelectorAll('*').forEach(n => n.remove());
-
-            drawTreemap(aggregateTreemap(d));
-          });
+          })
       }
       
       // aggregate data before passing it into treemap
@@ -274,6 +275,37 @@
           .attr("fill", "white")
 
         document.getElementById("treemap").appendChild(svgTreemap.node());
+
+        svgTreemapLegend = d3.create("svg")
+          .attr("width", widthTreemap)
+          .attr("height", 200)
+          .style("font", "10px sans-serif")
+        
+        const size = 10;
+
+        svgTreemapLegend.selectAll("mydots")
+          .data(data.children)
+          .enter()
+          .append("rect")
+          .attr("x", 100)
+          .attr("y", (d,i) => 100 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
+          .attr("width", size)
+          .attr("height", size)
+          .style("fill", d => colorScale(d.name))
+          .style("fill-opacity", 0.6)
+
+        svgTreemapLegend.selectAll("mylabels")
+          .data(data.children)
+          .enter()
+          .append("text")
+          .attr("x", 100 + size*1.2)
+          .attr("y", (d,i) => 100 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
+          .style("fill", d => colorScale(d.name))
+          .text(d => regionAbbr[d.name])
+          .attr("text-anchor", "left")
+          .style("alignment-baseline", "middle")
+
+        document.getElementById("treemap").appendChild(svgTreemapLegend.node());
       }
 
       function treemap(data) {
