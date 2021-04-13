@@ -25,6 +25,11 @@
         margin-left: 60;
       }
 
+      #legend {
+        display: flex;
+        align-content: flex-start;
+      }
+
     </style>
   </head>
   <body>
@@ -37,6 +42,10 @@
       <div id="treemap">
         <!-- This is where we will put our treemap. -->
       </div>
+    </div>
+
+    <div id="legend">
+      <!-- This is where we will put our ber graph's legend. -->
     </div>
 
     <div id="filter">
@@ -112,6 +121,8 @@
       const data10 = data.filter(d => d.rank <= 10);
 
       const regionAbbr = {NA: "North America", JP: "Japan", Other: "Other", EU: "Europe"}
+
+      const genre = data.map(d => d.genre).filter((v, i, a) => a.indexOf(v) === i)
       
       // default platform/genre values
       let platformValue = "---";
@@ -291,7 +302,7 @@
           .enter()
           .append("rect")
           .attr("x", 10)
-          .attr("y", (d,i) => 10 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
+          .attr("y", (d,i) => 20 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
           .attr("width", size)
           .attr("height", size)
           .style("fill", d => colorScale(d.name))
@@ -302,7 +313,7 @@
           .enter()
           .append("text")
           .attr("x", 10 + size*1.2)
-          .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
+          .attr("y", (d,i) => 20 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
           .style("fill", d => colorScale(d.name))
           .text(d => regionAbbr[d.name])
           .attr("text-anchor", "left")
@@ -314,6 +325,37 @@
       function treemap(data) {
         return d3.treemap().tile(d3.treemapSquarify).size([widthTreemap, heightTreemap]).padding(1).round(true)
               (d3.hierarchy(data).sum(d => d.value).sort((a, b) => b.value - a.value))
+      }
+
+      function drawLegend(label) {
+        const size = 10;
+
+        svgBarLegend = d3.create("svg")
+          .attr("height", 100)
+          .style("font", "10px sans-serif")
+
+        svgBarLegend.selectAll("bardots")
+          .data(label)
+          .enter()
+          .append("rect")
+          .attr("x", margin.left)
+          .attr("y", (d,i) => 20 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
+          .attr("width", size)
+          .attr("height", size)
+          .style("fill", d => colorScale12(d))
+
+        svgBarLegend.selectAll("barlabels")
+          .data(label)
+          .enter()
+          .append("text")
+          .attr("x", margin.left + size*1.2)
+          .attr("y", (d,i) => 20 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
+          .style("fill", d => colorScale12(d))
+          .text(d => d)
+          .attr("text-anchor", "left")
+          .style("alignment-baseline", "middle")
+
+        document.getElementById("legend").appendChild(svgBarLegend.node());
       }
       
       // Function to filter data based on dropdown menu values
@@ -331,6 +373,10 @@
       }
 
       dataJoinHisto(data10); 
+
+      drawLegend(genre.slice(0, 4));
+      drawLegend(genre.slice(4, 8));
+      drawLegend(genre.slice(8, 12));
 
       document.getElementById("chart").appendChild(svg.node());
       document.getElementById("platform").addEventListener('change', (e) => {
