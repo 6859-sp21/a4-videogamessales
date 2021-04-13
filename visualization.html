@@ -102,7 +102,7 @@
       d3.csv("https://raw.githubusercontent.com/6859-sp21/a4-videogamessales/main/vgsalesglobale.csv")
       .then(data => {
       // 2. Setting up variables that describe our chart's space.
-      const height = 400;
+      const height = 450;
       const width = 800;
       const margin = ({top: 20, right: 60, bottom: 35, left: 60});
 
@@ -137,8 +137,12 @@
           .nice();
       
       const colorScale = d3.scaleOrdinal()
-          .domain([0,10])
+          .domain([0,9])
           .range(d3.schemeTableau10);
+
+      const colorScale12 = d3.scaleOrdinal()
+          .domain([0,11])
+          .range(d3.schemeSet3);
 
       //5. Draw our histogram
       // x-aixs
@@ -181,14 +185,14 @@
           .data(rawData)
           .join(
             enter => enter.append("rect")
-                  .attr('fill', d => colorScale(d.genre))
+                  .attr('fill', d => colorScale12(d.genre))
                   .attr('x', (d, i) => xScale(i + 1))
                   .attr('y', d => yScale(d.global_sales))
                   .attr('width', xScale.bandwidth())
                   .call(enter => enter.transition().duration(1000)
                     .attr('height', d => height - yScale(d.global_sales)- margin.bottom)),
             update => update
-                  .attr('fill', d => colorScale(d.genre))
+                  .attr('fill', d => colorScale12(d.genre))
                   .attr('x', (d, i) => xScale(i + 1))
                   .attr('y', d => yScale(d.global_sales))
                   .attr('width', xScale.bandwidth())
@@ -207,7 +211,7 @@
             + "<br/> Total Unit Sales: " + d.global_sales  + "m<br/> Platform: " + d.platform + "<br/> Genre: " + d.genre 
             + "<br/> Publisher: " + d.publisher)
               .style("left", (event.pageX) + "px")
-              .style("background", colorScale(d.genre))
+              .style("background", colorScale12(d.genre))
               .style("top", (event.pageY - 28) + "px");
 
             d3.select(this)
@@ -277,8 +281,7 @@
         document.getElementById("treemap").appendChild(svgTreemap.node());
 
         svgTreemapLegend = d3.create("svg")
-          .attr("width", widthTreemap)
-          .attr("height", 200)
+          .attr("viewbox", "10 10 100 100")
           .style("font", "10px sans-serif")
         
         const size = 10;
@@ -287,8 +290,8 @@
           .data(data.children)
           .enter()
           .append("rect")
-          .attr("x", 100)
-          .attr("y", (d,i) => 100 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
+          .attr("x", 10)
+          .attr("y", (d,i) => 10 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
           .attr("width", size)
           .attr("height", size)
           .style("fill", d => colorScale(d.name))
@@ -298,8 +301,8 @@
           .data(data.children)
           .enter()
           .append("text")
-          .attr("x", 100 + size*1.2)
-          .attr("y", (d,i) => 100 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
+          .attr("x", 10 + size*1.2)
+          .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
           .style("fill", d => colorScale(d.name))
           .text(d => regionAbbr[d.name])
           .attr("text-anchor", "left")
