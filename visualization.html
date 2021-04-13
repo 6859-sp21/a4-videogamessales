@@ -315,7 +315,7 @@
           .attr("x", 10 + size*1.2)
           .attr("y", (d,i) => 20 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
           .style("fill", d => colorScale(d.name))
-          .text(d => regionAbbr[d.name])
+          .text(d => regionAbbr[d.name] + ' ' + d.value.toFixed(2) + '%')
           .attr("text-anchor", "left")
           .style("alignment-baseline", "middle")
 
