@@ -125,23 +125,22 @@
         .attr('height', height);
 
       // 4. Setting up scales.
-      const xScale = d3.scaleBand()
-          // .domain(data10.map(d => d.rank))
-          .domain([1,2,3,4,5,6,7,8,9,10])
-          .range([margin.left, width - margin.right])
-          .padding(0.1);
-    
-      const yScale = d3.scaleLinear()
+      const xScale = d3.scaleLinear()
           .domain([0, d3.max(data10, d => d.global_sales)])
-          .range([height - margin.bottom, margin.top])
+          .range([margin.left, width - margin.right])
           .nice();
+
+      const yScale = d3.scaleBand()
+          .domain([1,2,3,4,5,6,7,8,9,10])
+          .range([margin.top, height - margin.bottom])
+          .padding(0.1);
       
       const colorScale = d3.scaleOrdinal()
           .domain([0,10])
           .range(d3.schemeTableau10);
 
       //5. Draw our histogram
-      // x-aixs
+      // x-axis
       svg.append('g')
         .classed('x-axis', true)
         .attr('transform', `translate(0, ${height - margin.bottom})`)
@@ -153,7 +152,7 @@
           .attr('font-weight', 'bold')
           .attr('x', width - margin.right)
           .attr('y', margin.bottom - 5)
-          .text('Ranking');
+          .text('Total Unit Sales (million)');
       
       // y-axis
       svg.append('g')
@@ -166,7 +165,7 @@
           .attr('fill', 'black')
           .attr('font-size', '12px')
           .attr('font-weight', 'bold')
-          .text('Total Unit Sales (million)');
+          .text('Ranking');
 
       const g_hist = svg.append('g')
         .classed('marks', true);
@@ -182,21 +181,21 @@
           .join(
             enter => enter.append("rect")
                   .attr('fill', d => colorScale(d.genre))
-                  .attr('x', (d, i) => xScale(i + 1))
-                  .attr('y', d => yScale(d.global_sales))
-                  .attr('width', xScale.bandwidth())
+                  .attr('x', d => margin.left) // Constant 
+                  .attr('y', (d, i) => yScale(i + 1))
+                  .attr('height', yScale.bandwidth())
                   .call(enter => enter.transition().duration(1000)
-                    .attr('height', d => height - yScale(d.global_sales)- margin.bottom)),
+                    .attr('width', d => xScale(d.global_sales) - margin.left)),
             update => update
                   .attr('fill', d => colorScale(d.genre))
-                  .attr('x', (d, i) => xScale(i + 1))
-                  .attr('y', d => yScale(d.global_sales))
-                  .attr('width', xScale.bandwidth())
+                  .attr('x', d => margin.left) // Constant 
+                  .attr('y', (d, i) => yScale(i + 1))
+                  .attr('height', yScale.bandwidth())
                   .call(enter => enter.transition().duration(1000)
-                    .attr('height', d => height - yScale(d.global_sales)- margin.bottom)),
+                    .attr('width', d => xScale(d.global_sales) - margin.left)),
             exit => exit
                   .call(exit => exit.transition().duration(1000)
-                    .attr('height', d => height - yScale(0))
+                    .attr('width', d => xScale(0) - margin.left)
                     .remove())
           )
           .on("mouseover", function(event, d) {
@@ -213,6 +212,7 @@
             d3.select(this)
               .attr("opacity", .5)
 
+            
             drawTreemap(aggregateTreemap(d));
           })
           .on("mouseout", function(event, d) {
