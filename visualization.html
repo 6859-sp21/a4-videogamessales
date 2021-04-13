@@ -135,9 +135,7 @@
       // default platform/genre values
       let platformValue = "---";
       let genreValue = "---";
-
-      console.log(data10);
-
+      
       // 3. Create a SVG we will use to make our chart.
       const svg = d3.create('svg')
         .attr('width', width)
@@ -201,8 +199,6 @@
       
       // draw histogram
       function dataJoinHisto(rawData) {
-        // Not actually giving max
-        console.log(d3.max(rawData, d => parseFloat(d.global_sales)));
 
         // Re-establishing scale using data given
         let xScale = d3.scaleLinear()
@@ -269,7 +265,6 @@
       // aggregate data before passing it into treemap
       function aggregateTreemap(data) {
         total = parseFloat(data.na_sales) + parseFloat(data.jp_sales) + parseFloat(data.other_sales) + parseFloat(data.eu_sales);
-        console.log(total);
         return {
           name: data.name,
           children: [
