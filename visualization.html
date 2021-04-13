@@ -128,14 +128,14 @@
 
       const data10 = data.filter(d => d.rank <= 10);
 
-      const regionAbbr = {NA: "North America", JP: "Japan", Other: "Other", EU: "Europe"}
+      const regionAbbr = {NA: "North America", JP: "Japan", O: "Other", EU: "Europe"}
 
       const genre = data.map(d => d.genre).filter((v, i, a) => a.indexOf(v) === i)
       
       // default platform/genre values
       let platformValue = "---";
       let genreValue = "---";
-      
+
       // 3. Create a SVG we will use to make our chart.
       const svg = d3.create('svg')
         .attr('width', width)
@@ -271,7 +271,7 @@
             {name: "NA", value: parseFloat(data.na_sales)/total * 100},
             {name: "JP", value: parseFloat(data.jp_sales)/total * 100},
             {name: "EU", value: parseFloat(data.eu_sales)/total * 100},
-            {name: "Other", value: parseFloat(data.other_sales)/total * 100}
+            {name: "O", value: parseFloat(data.other_sales)/total * 100}
           ]
         };
       }
@@ -305,7 +305,7 @@
         leaf.append("text")
           .attr("x", 10)    // +10 to adjust position (more right)
           .attr("y", 20)    // +20 to adjust position (lower)
-          .text(d => d.data.name + " " + d.data.value.toFixed(2) + "%")
+          .text(d => d.data.name)
           .attr("font-size", "12px")
           .attr("fill", "white")
 
@@ -313,9 +313,9 @@
 
         svgTreemapLegend = d3.create("svg")
           .attr("viewbox", "10 10 100 100")
-          .style("font", "10px sans-serif")
+          .style("font", "12px sans-serif")
         
-        const size = 10;
+        const size = 12;
 
         svgTreemapLegend.selectAll("mydots")
           .data(data.children)
