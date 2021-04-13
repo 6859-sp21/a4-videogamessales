@@ -23,6 +23,9 @@
 
       #filter {
         margin-left: 60;
+        display: flex;
+        justify-content: space-around;
+        width: 700;
       }
 
       #legend {
@@ -49,61 +52,66 @@
     </div>
 
     <div id="filter">
-      <label for="platform"> 
-        Choose a platform:
-      </label>
 
-      <select name="platform" id="platform">
-        <option value="---">---</option>
-        <option value="3do">3DO</option>
-        <option value="3ds">3DS</option>
-        <option value="2600">2600</option>
-        <option value="dc">DC</option>
-        <option value="ds">DS</option>
-        <option value="gb">GB</option>
-        <option value="gba">GBA</option>
-        <option value="gc">GC</option>
-        <option value="gen">GEN</option>
-        <option value="gg">GG</option>
-        <option value="n64">N64</option>
-        <option value="nes">NES</option>
-        <option value="ng">NG</option>
-        <option value="pc">PC</option>
-        <option value="pcfx">PCFX</option>
-        <option value="ps">PS</option>
-        <option value="ps2">PS2</option>
-        <option value="ps3">PS3</option>
-        <option value="ps4">PS4</option>
-        <option value="psp">PSP</option>
-        <option value="sat">SAT</option>
-        <option value="scd">SCD</option>
-        <option value="tg16">TG16</option>
-        <option value="wii">Wii</option>
-        <option value="ws">WS</option>
-        <option value="x360">X360</option>
-        <option value="xb">XB</option>
-        <option value="xone">XOne</option>
-      </select>
+      <div id="platformFilter">
+        <label for="platform"> 
+          Choose a platform:
+        </label>
 
-      <label for="genre"> 
-        Choose a genre
-      </label>
+        <select name="platform" id="platform">
+          <option value="---">---</option>
+          <option value="3do">3DO</option>
+          <option value="3ds">3DS</option>
+          <option value="2600">2600</option>
+          <option value="dc">DC</option>
+          <option value="ds">DS</option>
+          <option value="gb">GB</option>
+          <option value="gba">GBA</option>
+          <option value="gc">GC</option>
+          <option value="gen">GEN</option>
+          <option value="gg">GG</option>
+          <option value="n64">N64</option>
+          <option value="nes">NES</option>
+          <option value="ng">NG</option>
+          <option value="pc">PC</option>
+          <option value="pcfx">PCFX</option>
+          <option value="ps">PS</option>
+          <option value="ps2">PS2</option>
+          <option value="ps3">PS3</option>
+          <option value="ps4">PS4</option>
+          <option value="psp">PSP</option>
+          <option value="sat">SAT</option>
+          <option value="scd">SCD</option>
+          <option value="tg16">TG16</option>
+          <option value="wii">Wii</option>
+          <option value="ws">WS</option>
+          <option value="x360">X360</option>
+          <option value="xb">XB</option>
+          <option value="xone">XOne</option>
+        </select>
+      </div>
 
-      <select name="genre" id="genre">
-        <option value="---">---</option>
-        <option value="action">Action</option>
-        <option value="adventure">Adventure</option>
-        <option value="fighting">Fighting</option>
-        <option value="misc">Misc</option>
-        <option value="platform">Platform</option>
-        <option value="puzzle">Puzzle</option>
-        <option value="racing">Racing</option>
-        <option value="role-playing">Role-Playing</option>
-        <option value="shooter">Shooter</option>
-        <option value="simulation">Simulation</option>
-        <option value="sports">Sports</option>
-        <option value="strategy">Strategy</option>
-      </select>
+      <div id="genreFilter">
+        <label for="genre"> 
+          Choose a genre
+        </label>
+
+        <select name="genre" id="genre">
+          <option value="---">---</option>
+          <option value="action">Action</option>
+          <option value="adventure">Adventure</option>
+          <option value="fighting">Fighting</option>
+          <option value="misc">Misc</option>
+          <option value="platform">Platform</option>
+          <option value="puzzle">Puzzle</option>
+          <option value="racing">Racing</option>
+          <option value="role-playing">Role-Playing</option>
+          <option value="shooter">Shooter</option>
+          <option value="simulation">Simulation</option>
+          <option value="sports">Sports</option>
+          <option value="strategy">Strategy</option>
+        </select>
+      </div>
     </div>
 
     <script>
@@ -350,7 +358,7 @@
           .append("text")
           .attr("x", margin.left + size*1.2)
           .attr("y", (d,i) => 20 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
-          .style("fill", d => colorScale12(d))
+          .style("fill", "black")
           .text(d => d)
           .attr("text-anchor", "left")
           .style("alignment-baseline", "middle")
