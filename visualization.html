@@ -295,7 +295,7 @@
         leaf.append("text")
           .attr("x", 10)    // +10 to adjust position (more right)
           .attr("y", 20)    // +20 to adjust position (lower)
-          .text(d => d.data.name + "\n" + d.data.value.toFixed(2) + "%")
+          .text(d => d.data.name + " " + d.data.value.toFixed(2) + "%")
           .attr("font-size", "12px")
           .attr("fill", "white")
 
