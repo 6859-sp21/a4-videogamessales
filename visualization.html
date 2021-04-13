@@ -6,11 +6,19 @@
     <style> /* set the CSS */
 
       @font-face {
-        font-family: 'joystixmonospace';
-        src: url('joystix.monospace-webfont.woff2') format('woff2'),
-          url('joystix.monospace-webfont.woff') format('woff');
+        font-family: 'vp_pixel';
+        src: url('webfontkit/vp-pixel.simplified-demo-webfont.woff2') format('woff2'),
+          url('webfontkit/vp-pixel.simplified-demo-webfont.woff') format('woff');
         font-weight: normal;
         font-style: normal;
+      }
+
+      h1 {
+        font-family: 'vp_pixel', san-serif;
+      }
+
+      label {
+        font-family: 'vp_pixel', san-serif;
       }
 
       div.tooltip {
@@ -148,9 +156,10 @@
       // 3. Create a SVG we will use to make our chart.
       const svg = d3.create('svg')
         .attr('width', width)
-        .attr('height', height);
-
-      
+        .attr('height', height)
+        .style("font-size", "12px")
+        .style("font-family", "vp_pixel");
+        
       // 4. Setting up scales.
       // NOTE: x-axis always changes, while y-axis remains constant in this case
       let xScale = d3.scaleLinear()
@@ -181,6 +190,7 @@
           .attr('text-anchor', 'end')
           .attr('fill', 'black')
           .attr('font-size', '12px')
+          .attr("font-family", "vp_pixel")
           .attr('font-weight', 'bold')
           .attr('x', width - margin.right)
           .attr('y', margin.bottom - 5)
@@ -196,6 +206,7 @@
           .attr('text-anchor', 'end')
           .attr('fill', 'black')
           .attr('font-size', '12px')
+          .attr("font-family", "vp_pixel")
           .attr('font-weight', 'bold')
           .text('Ranking');
 
@@ -316,13 +327,15 @@
           .attr("y", 20)    // +20 to adjust position (lower)
           .text(d => d.data.name)
           .attr("font-size", "12px")
+          .attr("font-family", "vp_pixel")
           .attr("fill", "white")
 
         document.getElementById("treemap").appendChild(svgTreemap.node());
 
         svgTreemapLegend = d3.create("svg")
           .attr("viewbox", "10 10 100 100")
-          .style("font", "12px sans-serif")
+          .style("font-size", "12px")
+          .style("font-family", "vp_pixel")
         
         const size = 12;
 
@@ -341,8 +354,8 @@
           .data(data.children)
           .enter()
           .append("text")
-          .attr("x", 10 + size*1.2)
-          .attr("y", (d,i) => 20 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
+          .attr("x", 10 + size*1.5)
+          .attr("y", (d,i) => 22 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
           .style("fill", d => colorScale(d.name))
           .text(d => regionAbbr[d.name] + ' ' + d.value.toFixed(2) + '%')
           .attr("text-anchor", "left")
@@ -361,7 +374,8 @@
 
         svgBarLegend = d3.create("svg")
           .attr("height", 100)
-          .style("font", "10px sans-serif")
+          .style("font-size", "12px")
+          .style("font-family", "vp_pixel")
 
         svgBarLegend.selectAll("bardots")
           .data(label)
