@@ -143,13 +143,15 @@
         .attr('width', width)
         .attr('height', height);
 
+      
       // 4. Setting up scales.
-      const xScale = d3.scaleLinear()
-          .domain([0, d3.max(data10, d => d.global_sales)])
+      // NOTE: x-axis always changes, while y-axis remains constant in this case
+      let xScale = d3.scaleLinear()
+          .domain([0, d3.max(data10, d => parseFloat(d.global_sales))])
           .range([margin.left, width - margin.right])
           .nice();
 
-      const yScale = d3.scaleBand()
+      let yScale = d3.scaleBand()
           .domain([1,2,3,4,5,6,7,8,9,10])
           .range([margin.top, height - margin.bottom])
           .padding(0.1);
@@ -162,16 +164,12 @@
           .domain([0,11])
           .range(d3.schemeSet3);
 
-      // Functions for scaling axes
-      let xAxis = d3.axisBottom(xScale);
-      let yAxis = d3.axisLeft(yScale);
-
       //5. Draw our histogram
       // x-axis
       svg.append('g')
         .classed('x-axis', true)
         .attr('transform', `translate(0, ${height - margin.bottom})`)
-        .call(xAxis)
+        .call(d3.axisBottom(xScale))
         .append('text')
           .attr('text-anchor', 'end')
           .attr('fill', 'black')
@@ -185,7 +183,7 @@
       svg.append('g')
         .classed('y-axis', true)
         .attr('transform', `translate(${margin.left}, 0)`)
-        .call(yAxis)
+        .call(d3.axisLeft(yScale))
         .append('text')
           .attr('transform', `translate(-30, ${margin.top}) rotate(-90)`)
           .attr('text-anchor', 'end')
@@ -203,6 +201,19 @@
       
       // draw histogram
       function dataJoinHisto(rawData) {
+        // Not actually giving max
+        console.log(d3.max(rawData, d => parseFloat(d.global_sales)));
+
+        // Re-establishing scale using data given
+        let xScale = d3.scaleLinear()
+          .domain([0, d3.max(rawData, d => parseFloat(d.global_sales))])
+          .range([margin.left, width - margin.right])
+          .nice();
+
+        // Re-drawing x-axis
+        svg.selectAll("g.x-axis")
+          .call(d3.axisBottom(xScale));
+
         g_hist.selectAll('rect')
           .data(rawData)
           .join(
@@ -372,7 +383,7 @@
       
       // Function to filter data based on dropdown menu values
 
-      const filterData = (platform, genre) => {
+      let filterData = async (platform, genre) => {
         return data.filter(function(d) {
           if (this.count < 10 && 
               (platform === d.platform.toLowerCase() || platform === "---") && 
@@ -394,26 +405,19 @@
       document.getElementById("platform").addEventListener('change', (e) => {
         platformValue = e.target.value;
 
-        let filteredData = filterData(platformValue, genreValue);
-        console.log(filteredData);
-        // Trying to change axes
-        svg.select("y-axis")
-          .call(yAxis);
+        // Attempting promise (no catch statement yet)
+        // Seems like promise isn't really needed
+        filterData(platformValue, genreValue)
+          .then(filteredData => dataJoinHisto(filteredData));
 
-        svg.select("x-axis")
-          .call(xAxis);
-
-        // Might need a promise here
-        dataJoinHisto(filteredData);
       });
       document.getElementById("genre").addEventListener('change', (e) => {
         genreValue = e.target.value;
-
-        let filteredData = filterData(platformValue, genreValue);
-        console.log(filteredData);
-        // Might need a promise here
-        dataJoinHisto(filteredData);}
-      );
+        
+        // Same as above
+        filterData(platformValue, genreValue)
+          .then(filteredData => dataJoinHisto(filteredData));
+      });
       });
       
     </script>
