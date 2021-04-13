@@ -195,7 +195,7 @@
                     .attr('width', d => xScale(d.global_sales) - margin.left)),
             exit => exit
                   .call(exit => exit.transition().duration(1000)
-                    .attr('height', d => height - yScale(0))
+                    .attr('width', d => xScale(0) - margin.left)
                     .remove())
           )
           .on("mouseover", function(event, d) {
@@ -212,6 +212,7 @@
             d3.select(this)
               .attr("opacity", .5)
 
+            
             drawTreemap(aggregateTreemap(d));
           })
           .on("mouseout", function(event, d) {
