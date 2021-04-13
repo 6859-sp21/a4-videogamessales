@@ -132,7 +132,7 @@
 
       const yScale = d3.scaleBand()
           .domain([1,2,3,4,5,6,7,8,9,10])
-          .range([height - margin.bottom, margin.top])
+          .range([margin.top, height - margin.bottom])
           .padding(0.1);
       
       const colorScale = d3.scaleOrdinal()
