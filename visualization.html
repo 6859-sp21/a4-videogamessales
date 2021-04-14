@@ -92,7 +92,7 @@
         </label>
 
         <select name="platform" id="platform">
-          <option value="---">---</option>
+          <option value="ALL">ALL</option>
           <option value="3do">3DO</option>
           <option value="3ds">3DS</option>
           <option value="2600">2600</option>
@@ -130,7 +130,7 @@
         </label>
 
         <select name="genre" id="genre">
-          <option value="---">---</option>
+          <option value="ALL">ALL</option>
           <option value="action">Action</option>
           <option value="adventure">Adventure</option>
           <option value="fighting">Fighting</option>
@@ -168,8 +168,8 @@
       const genre = data.map(d => d.genre).filter((v, i, a) => a.indexOf(v) === i)
       
       // default platform/genre values
-      let platformValue = "---";
-      let genreValue = "---";
+      let platformValue = "ALL";
+      let genreValue = "ALL";
 
       // 3. Create a SVG we will use to make our chart.
       const svg = d3.create('svg')
@@ -424,8 +424,8 @@
       let filterData = async (platform, genre) => {
         return data.filter(function(d) {
           if (this.count < 15 && 
-              (platform === d.platform.toLowerCase() || platform === "---") && 
-              (genre === d.genre.toLowerCase() || genre === "---") ) {
+              (platform === d.platform.toLowerCase() || platform === "ALL") && 
+              (genre === d.genre.toLowerCase() || genre === "ALL") ) {
             this.count++;
             return true;
           }
