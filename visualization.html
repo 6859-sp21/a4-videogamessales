@@ -143,7 +143,7 @@
       const heightTreemap = 250;
       const widthTreemap = 400;
 
-      const data10 = data.filter(d => d.rank <= 10);
+      const data15 = data.filter(d => d.rank <= 15);
 
       const regionAbbr = {NA: "North America", JP: "Japan", O: "Other", EU: "Europe"}
 
@@ -163,12 +163,12 @@
       // 4. Setting up scales.
       // NOTE: x-axis always changes, while y-axis remains constant in this case
       let xScale = d3.scaleLinear()
-          .domain([0, d3.max(data10, d => parseFloat(d.global_sales))])
+          .domain([0, d3.max(data15, d => parseFloat(d.global_sales))])
           .range([margin.left, width - margin.right])
           .nice();
 
       let yScale = d3.scaleBand()
-          .domain([1,2,3,4,5,6,7,8,9,10])
+          .domain([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
           .range([margin.top, height - margin.bottom])
           .padding(0.1);
       
@@ -405,7 +405,7 @@
 
       let filterData = async (platform, genre) => {
         return data.filter(function(d) {
-          if (this.count < 10 && 
+          if (this.count < 15 && 
               (platform === d.platform.toLowerCase() || platform === "---") && 
               (genre === d.genre.toLowerCase() || genre === "---") ) {
             this.count++;
@@ -415,7 +415,7 @@
         }, {count: 0})
       }
 
-      dataJoinHisto(data10); 
+      dataJoinHisto(data15); 
 
       drawLegend(genre.slice(0, 4));
       drawLegend(genre.slice(4, 8));
