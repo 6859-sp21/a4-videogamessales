@@ -1,4 +1,6 @@
-[Website Link](https://6859-sp21.github.io/a4-videogamessales/visualization.html)
+[Website Link](https://6859-sp21.github.io/a4-videogamessales/visualization.html)  
+[Dataset Reference](https://raw.githubusercontent.com/6859-sp21/a4-videogamessales/main/vgsalesglobale.csv)  
+[6.859 D3 Intro Workshops](https://github.com/6859-sp21/d3intro)
 
 # Rationale for design decisions
 
